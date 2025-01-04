@@ -22,15 +22,18 @@ function browserPath(browser: ExtTarget): string {
   }
 }
 
-function cmd({ browserInfo, sourceDir }: WebExtensionInit) {
+async function cmd({ browserInfo, sourceDir }: WebExtensionInit) {
   const exePath = browserInfo.path || browserPath(browserInfo.browser);
+  let child: Deno.ChildProcess;
   switch (browserInfo.browser) {
     case "firefox":
-      runExtensionFirefox(exePath, sourceDir);
+      child = runExtensionFirefox(exePath, sourceDir);
       break;
     default:
-      runExtensionChrome(exePath, sourceDir);
+      child = runExtensionChrome(exePath, sourceDir);
       break;
   }
+  const status = await child.status;
+  console.log(`status: ${status}`);
 }
 export default { cmd };
