@@ -8,9 +8,13 @@ export type BrowserInfo = {
   path?: string;
 };
 
-export type WebExtensionInit = {
+export type WebExtensionInfo = {
   browserInfo: BrowserInfo;
   sourceDir: string;
+};
+
+export type WebExtensionInit = {
+  shouldExistProgram?: boolean;
 };
 
 function browserPath(browser: ExtTarget): string {
@@ -22,7 +26,10 @@ function browserPath(browser: ExtTarget): string {
   }
 }
 
-async function cmd({ browserInfo, sourceDir }: WebExtensionInit) {
+async function cmd(
+  { browserInfo, sourceDir }: WebExtensionInfo,
+  { shouldExistProgram }: WebExtensionInit,
+) {
   const exePath = browserInfo.path || browserPath(browserInfo.browser);
   let child: Deno.ChildProcess;
   switch (browserInfo.browser) {
@@ -30,10 +37,14 @@ async function cmd({ browserInfo, sourceDir }: WebExtensionInit) {
       child = runExtensionFirefox(exePath, sourceDir);
       break;
     default:
-      child = runExtensionChrome(exePath, sourceDir);
+      child = runExtensionChrome(
+        exePath,
+        sourceDir,
+        shouldExistProgram || false,
+      );
       break;
   }
   const status = await child.status;
   console.log(`status: ${status}`);
 }
-export default { cmd };
+export default cmd;

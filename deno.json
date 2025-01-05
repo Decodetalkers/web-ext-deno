@@ -1,7 +1,10 @@
 {
   "name": "web-ext-deno",
   "version": "0.1.0",
-  "exports": "./mod.ts",
+  "exports": {
+    ".": "./mod.ts",
+    "./bin": "./bin.ts"
+  },
   "tasks": {
     "dev": "deno test --watch mod.ts"
   },

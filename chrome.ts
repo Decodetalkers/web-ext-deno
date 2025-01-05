@@ -1,4 +1,8 @@
-function runExtension(exePath: string, sourceDir: string): Deno.ChildProcess {
+function runExtension(
+  exePath: string,
+  sourceDir: string,
+  _shouldExistProgram: boolean,
+): Deno.ChildProcess {
   const command = new Deno.Command(exePath, {
     args: [
       `--load-extension=${sourceDir}`,

@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Browser Extension",
+  "description": "A browser Extension",
+  "version": "0.0.1",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content_script.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "options_page": "options.html",
+  "permissions": [
+    "storage",
+    "webRequest",
+    "<all_urls>"
+  ],
+  "optional_permissions": [
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "64": "icons/64.png",
+      "128": "icons/128.png",
+      "256": "icons/256.png"
+    }
+  },
+  "icons": {
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "64": "icons/64.png",
+    "128": "icons/128.png",
+    "256": "icons/256.png"
+  }
+}
