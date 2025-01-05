@@ -21,11 +21,16 @@ export async function packageXpi(sourceDir: string): Promise<XpiInfo> {
     await zipWriter.add(zippath, dataReader);
   }
   zipWriter.close();
-
-  const manifestJson = path.join(
-    Deno.cwd(),
+  let manifestJson = path.join(
     path.join(sourceDir, "manifest.json"),
   );
+  if (!path.isAbsolute(manifestJson)) {
+    manifestJson = path.join(
+      Deno.cwd(),
+      manifestJson,
+    );
+  }
+
   const fileData = await fetch(`file://${manifestJson}`);
   const jsonData = await fileData.json();
   const id = jsonData["applications"]["gecko"]["id"] as string;
