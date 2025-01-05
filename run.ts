@@ -34,7 +34,7 @@ async function cmd(
   let child: Deno.ChildProcess;
   switch (browserInfo.browser) {
     case "firefox":
-      child = runExtensionFirefox(exePath, sourceDir);
+      child = await runExtensionFirefox(exePath, sourceDir);
       break;
     default:
       child = runExtensionChrome(
