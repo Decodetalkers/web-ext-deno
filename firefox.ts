@@ -7,21 +7,19 @@ async function runExtension(
   sourceDir: string,
 ): Promise<Deno.ChildProcess> {
   const tempDir = await Deno.makeTempDir();
-  console.log(`${tempDir}`);
-  const profilDir = path.join(tempDir, "profile");
-  console.log(`${profilDir}`);
+  const profileDir = path.join(tempDir, "profile");
   const profileCreate = new Deno.Command(exePath, {
-    args: ["-createProfile", `dev-profile ${profilDir}`],
+    args: ["-createProfile", `dev-profile ${profileDir}`],
     stdin: "piped",
     stdout: "piped",
   });
   const create_child = profileCreate.spawn();
   await create_child.status;
-  await zipToXpi(sourceDir, profilDir);
+  await zipToXpi(sourceDir, profileDir);
   const command = new Deno.Command(exePath, {
     args: [
       "--profile",
-      profilDir,
+      profileDir,
     ],
     stdin: "piped",
     stdout: "piped",
