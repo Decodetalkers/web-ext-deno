@@ -45,7 +45,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "browser-extension@my-extension-id-email.com"
+      "id": "helloplugin@tutanota.com"
     }
   }
 }
