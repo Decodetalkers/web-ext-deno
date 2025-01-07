@@ -1,4 +1,4 @@
-import runExtensionChrome from "./chrome.ts";
+import runExtensionChromium from "./chromium.ts";
 import runExtensionFirefox from "./firefox.ts";
 
 export type ExtTarget = "firefox" | "chrome";
@@ -36,7 +36,7 @@ async function cmd(
       await runExtensionFirefox(exePath, sourceDir);
       break;
     default:
-      runExtensionChrome(
+      await runExtensionChromium(
         exePath,
         sourceDir,
         shouldExistProgram || false,
