@@ -6,6 +6,7 @@ import { isAbsolute, join } from "@std/path";
 
 import * as log from "@std/log";
 import { configureProfile } from "./firefox/preference.ts";
+import { reloadSupport } from "./reload.ts";
 
 const DEFAULT_PORT: number = 41835;
 
@@ -31,7 +32,19 @@ async function runExtension(
   }
   const remoteFirefox = await connectToFirefox({ port: DEFAULT_PORT });
 
-  await remoteFirefox.installTemporaryAddon(pluginDir, false);
+  const plugin = await remoteFirefox.installTemporaryAddon(pluginDir, false);
+
+  log.debug(`plugin info ${plugin}`);
+
+  const pluginId: string = plugin.addon.id;
+
+  await reloadSupport(async () => {
+    try {
+      await remoteFirefox.reloadAddon(pluginId);
+    } catch (_) {
+      // TODO:
+    }
+  });
 }
 
 export default runExtension;
