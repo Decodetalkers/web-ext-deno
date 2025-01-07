@@ -19,5 +19,15 @@
     "@std/path": "jsr:@std/path@^1.0.8",
     "@zip-js/zip-js": "jsr:@zip-js/zip-js@^2.7.54",
     "firefox-profile": "npm:firefox-profile@^4.7.0"
+  },
+  "lint": {
+    "exclude": [
+      "example"
+    ]
+  },
+  "fmt": {
+    "exclude": [
+      "example"
+    ]
   }
 }

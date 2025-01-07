@@ -16,7 +16,6 @@ export class ConnectError extends WebExtError {
   }
 }
 
-
 /*
  * The class for errors that can be fixed by the developer.
  */
