@@ -52,8 +52,8 @@ export function runFirefox(
   const binary = profile.binary || "firefox";
   const command = new Deno.Command(binary, {
     args,
-    stdin: "piped",
-    stdout: "piped",
+    stdin: "inherit",
+    stdout: "inherit",
   });
   const child = command.spawn();
   globalThis.addEventListener("unload", () => {

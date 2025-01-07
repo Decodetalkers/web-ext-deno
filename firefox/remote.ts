@@ -1,6 +1,7 @@
 import { RemoteTempInstallNotSupported, WebExtError } from "./error.ts";
 import { FirefoxConnection } from "./rdp-client.ts";
 import { delay } from "@std/async";
+import * as log from "@std/log";
 export class FirefoxRemote {
   client: FirefoxConnection;
   constructor(client: FirefoxConnection) {
@@ -19,9 +20,9 @@ export class FirefoxRemote {
         );
       }
       return response.addonsActor;
-    } catch (_) {
+    } catch (err) {
       // Fallback to listTabs otherwise, Firefox 49 - 77 (bug 1618691).
-      //log.debug('Falling back to listTabs because getRoot failed', err);
+      log.debug("Falling back to listTabs because getRoot failed", err);
     }
 
     try {
@@ -72,7 +73,7 @@ export async function connectToFirefox(
       await client.connect(port);
       break;
     } catch (e) {
-      console.log(e);
+      log.debug(e);
       await delay(200);
     }
   }

@@ -4,6 +4,7 @@ import { runFirefox } from "./firefox/firefox-cmd.ts";
 import { connectToFirefox } from "./firefox/remote.ts";
 import { isAbsolute, join } from "@std/path";
 import { WebExtError } from "./firefox/error.ts";
+import * as log from "@std/log";
 export const nonOverridablePreferences = [
   "devtools.debugger.remote-enabled",
   "devtools.debugger.prompt-connection",
@@ -150,6 +151,7 @@ async function runExtension(
     noRemote: true,
   });
 
+  log.debug(`firefox args, ${args}`);
   let pluginDir = sourceDir;
   if (!isAbsolute(pluginDir)) {
     pluginDir = join(Deno.cwd(), pluginDir);

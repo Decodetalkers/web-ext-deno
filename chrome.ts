@@ -7,8 +7,8 @@ function runExtension(
     args: [
       `--load-extension=${sourceDir}`,
     ],
-    stdin: "piped",
-    stdout: "piped",
+    stdin: "inherit",
+    stdout: "inherit",
   });
   const child = command.spawn();
   globalThis.addEventListener("unload", () => {

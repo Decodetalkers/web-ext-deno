@@ -1,3 +1,4 @@
+import * as log from "@std/log";
 export type Deferred = {
   resolve: (value: RDPMessage) => void;
   // deno-lint-ignore no-explicit-any
@@ -82,6 +83,9 @@ export class FirefoxConnection extends EventTarget {
   private active: Map<string, Deferred> = new Map();
   constructor() {
     super();
+    globalThis.addEventListener("unload", () => {
+      this.disconnect();
+    });
   }
   // deno-lint-ignore no-explicit-any
   emit(eventName: string, detail?: any) {
@@ -104,7 +108,6 @@ export class FirefoxConnection extends EventTarget {
 
   private readMessage(newIncoming: Uint8Array): boolean {
     const { data, rdpMessage, error, fatal } = parseRDPMessage(newIncoming);
-    console.log(rdpMessage);
     this.incoming = data;
     if (error) {
       this.emit(
@@ -212,7 +215,7 @@ export class FirefoxConnection extends EventTarget {
             }
             if (n == null) {
               this.rdpConnection = undefined;
-              console.log("Connection closed by server");
+              log.info("Connection closed by server");
               return;
             }
             const receivedMessage = buffer.subarray(0, n);
@@ -276,7 +279,6 @@ export class FirefoxConnection extends EventTarget {
         const encoder = new TextEncoder();
         const buffer = encoder.encode(str);
         str = `${buffer.length}:${str}`;
-        console.log(str);
         const data = encoder.encode(str);
         this.rdpConnection?.write(data);
         this.expectReply(request.to, deferred);
