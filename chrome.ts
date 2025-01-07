@@ -2,7 +2,7 @@ function runExtension(
   exePath: string,
   sourceDir: string,
   _shouldExistProgram: boolean,
-): Deno.ChildProcess {
+) {
   const command = new Deno.Command(exePath, {
     args: [
       `--load-extension=${sourceDir}`,
@@ -11,7 +11,9 @@ function runExtension(
     stdout: "piped",
   });
   const child = command.spawn();
-  return child;
+  globalThis.addEventListener("unload", () => {
+    child.kill();
+  });
 }
 
 export default runExtension;

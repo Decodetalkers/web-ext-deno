@@ -31,20 +31,17 @@ async function cmd(
   { shouldExistProgram }: WebExtensionInit,
 ) {
   const exePath = browserInfo.path || browserPath(browserInfo.browser);
-  let child: Deno.ChildProcess;
   switch (browserInfo.browser) {
     case "firefox":
-      child = await runExtensionFirefox(exePath, sourceDir);
+      await runExtensionFirefox(exePath, sourceDir);
       break;
     default:
-      child = runExtensionChrome(
+      runExtensionChrome(
         exePath,
         sourceDir,
         shouldExistProgram || false,
       );
       break;
   }
-  const status = await child.status;
-  console.log(`status: ${status}`);
 }
 export default cmd;
