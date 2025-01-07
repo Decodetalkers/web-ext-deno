@@ -7,7 +7,7 @@ export class FirefoxRemote {
   constructor(client: FirefoxConnection) {
     this.client = client;
   }
-  async getAddonsActor() {
+  async getAddonsActor(): Promise<string> {
     try {
       // getRoot should work since Firefox 55 (bug 1352157).
       const response = await this.client.request("getRoot");

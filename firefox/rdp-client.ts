@@ -1,23 +1,34 @@
 import * as log from "@std/log";
 export type Deferred = {
-  resolve: (value: RDPMessage) => void;
+  resolve: (value: RDPData) => void;
   // deno-lint-ignore no-explicit-any
   reject: (reason?: any) => void;
 };
 
 const decoder = new TextDecoder();
 
-type RDPMessage = {
-  data: Uint8Array;
+export type RDPData = {
+  from: string;
   // deno-lint-ignore no-explicit-any
-  rdpMessage?: any;
+  [key: string]: any; // Allows other unknown keys
+};
+
+export type RDPMessage = {
+  data: Uint8Array;
+  rdpMessage?: RDPData;
   error?: Error | unknown;
   fatal?: boolean;
 };
 
-type Pending = {
+export type RDPRequest = {
+  to: string;
+  type: string;
   // deno-lint-ignore no-explicit-any
-  request: any;
+  [key: string]: any; // Allows other unknown keys
+};
+
+export type Pending = {
+  request: RDPRequest;
   deferred: Deferred;
 };
 
@@ -146,8 +157,7 @@ export class FirefoxConnection extends EventTarget {
     this.pending = [];
   }
 
-  // deno-lint-ignore no-explicit-any
-  handleMessage(rdpData: any) {
+  handleMessage(rdpData: RDPData) {
     if (rdpData.from == null) {
       if (rdpData.error) {
         this.emit("rdp-error", rdpData);
@@ -190,7 +200,7 @@ export class FirefoxConnection extends EventTarget {
     );
   }
 
-  async connect(port: number): Promise<RDPMessage> {
+  async connect(port: number): Promise<RDPData> {
     let client;
     try {
       client = await Deno.connect({
@@ -222,7 +232,7 @@ export class FirefoxConnection extends EventTarget {
             this.onData(receivedMessage);
           }
         } catch (error) {
-          console.error("Error:", error);
+          log.error("Error:", error);
         } finally {
           this.rdpConnection?.close();
         }
@@ -240,9 +250,8 @@ export class FirefoxConnection extends EventTarget {
     this.active.set(targetActor, deferred);
   }
 
-  // deno-lint-ignore no-explicit-any
-  request(requestProps: any): Promise<any> {
-    let request;
+  request(requestProps: RDPRequest | string): Promise<RDPData> {
+    let request: RDPRequest;
 
     if (typeof requestProps === "string") {
       request = { to: "root", type: requestProps };
