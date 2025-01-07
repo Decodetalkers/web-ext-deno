@@ -8,14 +8,15 @@ import * as log from "@std/log";
 import { configureProfile } from "./firefox/preference.ts";
 
 const DEFAULT_PORT: number = 41835;
+
 async function runExtension(
   exePath: string,
   sourceDir: string,
-): Promise<Deno.ChildProcess> {
+) {
   const firefoxTmpProfile = new FirefoxProfile();
   configureProfile(firefoxTmpProfile);
   const profile = firefoxTmpProfile.path();
-  const { args, child } = runFirefox({
+  const { args } = runFirefox({
     binary: exePath,
     profile,
     port: DEFAULT_PORT,
@@ -31,8 +32,6 @@ async function runExtension(
   const remoteFirefox = await connectToFirefox({ port: DEFAULT_PORT });
 
   await remoteFirefox.installTemporaryAddon(pluginDir, false);
-
-  return child;
 }
 
 export default runExtension;

@@ -100,7 +100,7 @@ const prefs = {
   firefox: prefsFirefox,
 };
 
-type AppKeys = keyof typeof prefs;
+export type AppKeys = keyof typeof prefs;
 type Prefreference = {
   [key: string]: boolean | number | string;
 };
