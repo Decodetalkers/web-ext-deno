@@ -1,9 +1,16 @@
-import { RemoteTempInstallNotSupported, WebExtError } from "./error.ts";
-import { FirefoxConnection } from "./rdp-client.ts";
+import {
+  RemoteTempInstallNotSupported,
+  UsageError,
+  WebExtError,
+} from "./error.ts";
+import type { RDPData } from "./rdp-client.ts";
+import { type AddonInfo, FirefoxConnection } from "./rdp-client.ts";
 import { delay } from "@std/async";
 import * as log from "@std/log";
+const encoder = new TextEncoder();
 export class FirefoxRemote {
   client: FirefoxConnection;
+  checkedForAddonReloading: boolean = false;
   constructor(client: FirefoxConnection) {
     this.client = client;
   }
@@ -56,6 +63,80 @@ export class FirefoxRemote {
       openDevTools,
     });
     return response;
+  }
+
+  async getInstalledAddon(addonId: string): Promise<AddonInfo> {
+    try {
+      const response = await this.allInstalledAddons();
+      for (const addon of response.addons) {
+        if (addon.id === addonId) {
+          return addon;
+        }
+      }
+      log.debug(
+        `Remote Firefox has these addons: ${
+          response.addons.map((a: AddonInfo) => a.id)
+        }`,
+      );
+      return Promise.reject(
+        new WebExtError(
+          "The remote Firefox does not have your extension installed",
+        ),
+      );
+    } catch (err) {
+      throw new WebExtError(`Remote Firefox: listAddons() error: ${err}`);
+    }
+  }
+
+  async addonRequest(addon: AddonInfo, request: string) {
+    try {
+      const response = await this.client.request({
+        to: addon.actor,
+        type: request,
+      });
+      return response;
+    } catch (err) {
+      log.debug(`Client responded to '${request}' request with error:`, err);
+      throw new WebExtError(`Remote Firefox: addonRequest() error: ${err}`);
+    }
+  }
+
+  async checkForAddonReloading(addon: AddonInfo) {
+    if (this.checkedForAddonReloading) {
+      // We only need to check once if reload() is supported.
+      return addon;
+    } else {
+      const response = await this.addonRequest(addon, "requestTypes");
+
+      if (response.requestTypes.indexOf("reload") === -1) {
+        const supportedRequestTypes = JSON.stringify(response.requestTypes);
+        log.debug(`Remote Firefox only supports: ${supportedRequestTypes}`);
+        throw new UsageError(
+          "This Firefox version does not support add-on reloading. " +
+            "Re-run with --no-reload",
+        );
+      } else {
+        this.checkedForAddonReloading = true;
+        return addon;
+      }
+    }
+  }
+
+  async reloadAddon(addonId: string) {
+    const addon = await this.getInstalledAddon(addonId);
+    await this.checkForAddonReloading(addon);
+    await this.addonRequest(addon, "reload");
+    const data = encoder.encode(
+      `\rLast extension reload: ${new Date().toTimeString()}`,
+    );
+    await Deno.stdout.write(
+      data,
+    );
+    log.debug("\n");
+  }
+
+  async allInstalledAddons(): Promise<RDPData> {
+    return await this.client.request("listAddons");
   }
 }
 

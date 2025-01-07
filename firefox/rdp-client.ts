@@ -32,6 +32,13 @@ export type Pending = {
   deferred: Deferred;
 };
 
+export type AddonInfo = {
+  id: string;
+  actor: string;
+  // deno-lint-ignore no-explicit-any
+  [key: string]: any; // Allows other unknown keys
+};
+
 // Parse RDP packets: BYTE_LENGTH + ':' + DATA.
 export function parseRDPMessage(data: Uint8Array): RDPMessage {
   const str = decoder.decode(data);
