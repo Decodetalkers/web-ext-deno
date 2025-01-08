@@ -10,6 +10,11 @@ import { reloadSupport } from "./reload.ts";
 
 const DEFAULT_PORT: number = 41835;
 
+export * as remote from "./firefox/remote.ts"
+export * as preference from "./firefox/preference.ts"
+export * as rdpClient from "./firefox/rdp-client.ts"
+export * as firefoxCMD from "./firefox/firefox-cmd.ts"
+
 export type FirefoxOptions = {
   port?: number;
   devtool?: boolean;
@@ -54,8 +59,8 @@ async function runExtension(
   await reloadSupport(async () => {
     try {
       await remoteFirefox.reloadAddon(pluginId);
-    } catch (_) {
-      // TODO:
+    } catch (e) {
+      log.error((e as Error).message);
     }
   });
 }

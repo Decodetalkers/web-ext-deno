@@ -2,7 +2,7 @@ import {
   RemoteTempInstallNotSupported,
   UsageError,
   WebExtError,
-} from "./error.ts";
+} from "../error.ts";
 import type { RDPData } from "./rdp-client.ts";
 import { type AddonInfo, FirefoxConnection } from "./rdp-client.ts";
 import { delay } from "@std/async";
@@ -53,7 +53,7 @@ export class FirefoxRemote {
   async installTemporaryAddon(
     addonPath: string,
     openDevTools: boolean,
-  ) {
+  ): Promise<RDPData> {
     const addonsActor = await this.getAddonsActor();
 
     const response = await this.client.request({
@@ -88,7 +88,7 @@ export class FirefoxRemote {
     }
   }
 
-  async addonRequest(addon: AddonInfo, request: string) {
+  async addonRequest(addon: AddonInfo, request: string): Promise<RDPData> {
     try {
       const response = await this.client.request({
         to: addon.actor,
@@ -101,7 +101,7 @@ export class FirefoxRemote {
     }
   }
 
-  async checkForAddonReloading(addon: AddonInfo) {
+  async checkForAddonReloading(addon: AddonInfo): Promise<AddonInfo> {
     if (this.checkedForAddonReloading) {
       // We only need to check once if reload() is supported.
       return addon;

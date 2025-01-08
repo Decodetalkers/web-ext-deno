@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "exports": {
     ".": "./mod.ts",
-    "./bin": "./bin.ts"
+    "./bin": "./bin.ts",
+    "./firefox": "./firefox.ts",
+    "./chromium": "./chromium.ts",
+    "./error": "./error.ts"
   },
   "tasks": {
     "dev": "deno test --watch mod.ts"
