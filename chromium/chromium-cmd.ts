@@ -3,6 +3,7 @@ export type ChromiumOptions = {
   extensionDir: string[];
   newDataDir?: boolean;
   tmpDir: string;
+  shouldExitBrowser?: boolean;
 };
 
 function buildArgs(options: ChromiumOptions): string[] {
@@ -33,9 +34,11 @@ export function runChromium(
     stdout: "inherit",
   });
   const child = command.spawn();
-  Deno.addSignalListener("SIGINT", () => {
-    child.kill();
-  });
+  if (options.shouldExitBrowser) {
+    Deno.addSignalListener("SIGINT", () => {
+      child.kill();
+    });
+  }
 
   return { binary, child, args };
 }

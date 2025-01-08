@@ -24,6 +24,7 @@ async function runExtension(
   exePath: string,
   sourceDir: string,
   options: FirefoxOptions,
+  shouldExitProgram: boolean,
 ) {
   let profile = options.profile;
   if (!profile) {
@@ -40,6 +41,7 @@ async function runExtension(
     port,
     foreground: true,
     noRemote: true,
+    shouldExitBrowser: shouldExitProgram,
   });
 
   log.debug(`firefox args, ${args}`);

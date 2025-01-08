@@ -8,7 +8,7 @@ interface ArgParses {
   run?: boolean;
   sourceDir?: string;
   browser?: ExtTarget;
-  shouldExistProgram?: boolean;
+  shouldExitProgram?: boolean;
   verbos?: boolean;
 
   // shared
@@ -53,10 +53,11 @@ if (args.verbos) {
 if (args.run && args.sourceDir) {
   const sourceDir = args.sourceDir;
   const browser = args.browser!;
-  const shouldExistProgram = args.shouldExistProgram;
+  const shouldExitProgram = args.shouldExitProgram;
+  console.log(shouldExitProgram)
   const options = argsToOptions(args);
   webExt.cmd(
     { browserInfo: { browser }, sourceDir },
-    { shouldExistProgram, options },
+    { shouldExitProgram, options },
   );
 }

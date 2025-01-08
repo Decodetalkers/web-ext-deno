@@ -11,6 +11,7 @@ export type FirefoxOptions = {
   foreground?: boolean;
   noRemote?: boolean;
   port?: number;
+  shouldExitBrowser?: boolean;
 };
 
 function buildArgs(options: FirefoxOptions): string[] {
@@ -57,9 +58,12 @@ export function runFirefox(
   });
   const child = command.spawn();
 
-  Deno.addSignalListener("SIGINT", () => {
-    child.kill();
-  });
+  if (profile.shouldExitBrowser) {
+    Deno.addSignalListener("SIGINT", () => {
+      child.kill();
+    });
+  }
+
   return {
     binary,
     child,

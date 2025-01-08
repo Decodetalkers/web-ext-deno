@@ -24,7 +24,9 @@ export class ChromiumExtensionRunner {
     this.binary = binary;
   }
 
-  async run(): Promise<ChromiumInstance> {
+  async run(
+    { shouldExitBrowser }: { shouldExitBrowser?: boolean },
+  ): Promise<ChromiumInstance> {
     await this.setUpProfileDir();
     this.setUpWebSocket();
     const debugExtension = await this.createReloadManagerExtension();
@@ -34,6 +36,7 @@ export class ChromiumExtensionRunner {
       extensionDir: [this.sourceDir, debugExtension],
       newDataDir: this.options.newDataDir || true,
       tmpDir: this.profilePath!,
+      shouldExitBrowser,
     });
   }
 

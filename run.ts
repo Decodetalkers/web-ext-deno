@@ -14,7 +14,7 @@ export type WebExtensionInfo = {
 };
 
 export type WebExtensionInit = {
-  shouldExistProgram?: boolean;
+  shouldExitProgram?: boolean;
   options: CMDOptions;
 };
 
@@ -33,19 +33,25 @@ function browserPath(browser: ExtTarget): string {
 
 async function cmd(
   { browserInfo, sourceDir }: WebExtensionInfo,
-  { shouldExistProgram, options }: WebExtensionInit,
+  { shouldExitProgram, options }: WebExtensionInit,
 ) {
+  const shouldExistBrowser = shouldExitProgram || true;
   const exePath = browserInfo.path || browserPath(browserInfo.browser);
   switch (browserInfo.browser) {
     case "firefox":
-      await runExtensionFirefox(exePath, sourceDir, options as FirefoxOptions);
+      await runExtensionFirefox(
+        exePath,
+        sourceDir,
+        options as FirefoxOptions,
+        shouldExistBrowser,
+      );
       break;
     default:
       await runExtensionChromium(
         exePath,
         sourceDir,
         options as ChromiumOptions,
-        shouldExistProgram || false,
+        shouldExistBrowser,
       );
       break;
   }
