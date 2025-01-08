@@ -16,7 +16,7 @@ async function runExtension(
   const { args } = await runChromium({
     binary: exePath,
     extensionDir: sourceDir,
-    newDataDir,
+    newDataDir: newDataDir || true,
   });
   log.debug(args);
 }
