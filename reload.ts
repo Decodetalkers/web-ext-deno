@@ -1,4 +1,5 @@
 import * as log from "@std/log";
+import { CommonEncoder } from "./common.ts";
 
 const abortController = new AbortController();
 const { signal } = abortController;
@@ -7,6 +8,8 @@ const signalPromise = new Promise<void>((resolve, _) => {
     resolve();
   });
 });
+
+Deno.stdin.setRaw(true);
 
 Deno.addSignalListener("SIGINT", () => {
   abortController.abort();
@@ -53,6 +56,9 @@ async function reloadSupportInner(
         log.info("Quitting...");
         Deno.exit(0);
       }
+      await Deno.stdout.write(
+        CommonEncoder.encode("\n"),
+      );
     }
   } finally {
     reader.releaseLock();
