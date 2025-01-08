@@ -154,7 +154,7 @@ export async function connectToFirefox(
       await client.connect(port);
       break;
     } catch (e) {
-      log.debug(e);
+      log.debug((e as Error).message);
       await delay(200);
     }
   }

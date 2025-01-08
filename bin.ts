@@ -2,11 +2,14 @@ import { parseArgs } from "@std/cli";
 import type { CMDOptions, ExtTarget } from "./run.ts";
 import webExt from "./mod.ts";
 
+import * as log from "@std/log";
+
 interface ArgParses {
   run?: boolean;
   sourceDir?: string;
   browser?: ExtTarget;
   shouldExistProgram?: boolean;
+  verbos?: boolean;
 
   // firefox:
   port?: number;
@@ -28,6 +31,23 @@ function argsToOptions(args: ArgParses): CMDOptions {
 }
 
 const args = parseArgs(Deno.args) as ArgParses;
+
+if (args.verbos) {
+  log.setup({
+    handlers: {
+      console: new log.ConsoleHandler("DEBUG", {
+        useColors: true,
+      }), // Set the log level
+    },
+    loggers: {
+      default: {
+        level: "DEBUG", // Set the logger's level to debug
+        handlers: ["console"],
+      },
+    },
+  });
+}
+
 if (args.run && args.sourceDir) {
   const sourceDir = args.sourceDir;
   const browser = args.browser!;
