@@ -1,5 +1,5 @@
-import runExtensionChromium from "./chromium.ts";
-import runExtensionFirefox from "./firefox.ts";
+import runExtensionChromium, { type ChromiumOptions } from "./chromium.ts";
+import runExtensionFirefox, { type FirefoxOptions } from "./firefox.ts";
 
 export type ExtTarget = "firefox" | "chrome";
 
@@ -15,7 +15,12 @@ export type WebExtensionInfo = {
 
 export type WebExtensionInit = {
   shouldExistProgram?: boolean;
+  options: CMDOptions;
 };
+
+export type CMDOptions = FirefoxOptions | ChromiumOptions;
+
+export type { ChromiumOptions, FirefoxOptions };
 
 function browserPath(browser: ExtTarget): string {
   switch (browser) {
@@ -28,17 +33,18 @@ function browserPath(browser: ExtTarget): string {
 
 async function cmd(
   { browserInfo, sourceDir }: WebExtensionInfo,
-  { shouldExistProgram }: WebExtensionInit,
+  { shouldExistProgram, options }: WebExtensionInit,
 ) {
   const exePath = browserInfo.path || browserPath(browserInfo.browser);
   switch (browserInfo.browser) {
     case "firefox":
-      await runExtensionFirefox(exePath, sourceDir);
+      await runExtensionFirefox(exePath, sourceDir, options as FirefoxOptions);
       break;
     default:
       await runExtensionChromium(
         exePath,
         sourceDir,
+        options as ChromiumOptions,
         shouldExistProgram || false,
       );
       break;

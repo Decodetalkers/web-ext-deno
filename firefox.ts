@@ -10,17 +10,30 @@ import { reloadSupport } from "./reload.ts";
 
 const DEFAULT_PORT: number = 41835;
 
+export type FirefoxOptions = {
+  port?: number;
+  devtool?: boolean;
+  profile?: string;
+};
+
 async function runExtension(
   exePath: string,
   sourceDir: string,
+  options: FirefoxOptions,
 ) {
-  const firefoxTmpProfile = new FirefoxProfile();
-  configureProfile(firefoxTmpProfile);
-  const profile = firefoxTmpProfile.path();
+  let profile = options.profile;
+  if (!profile) {
+    const firefoxTmpProfile = new FirefoxProfile();
+    configureProfile(firefoxTmpProfile);
+    profile = firefoxTmpProfile.path();
+  }
+  const port = options.port || DEFAULT_PORT;
+  const devtool = options.devtool || false;
+
   const { args } = runFirefox({
     binary: exePath,
     profile,
-    port: DEFAULT_PORT,
+    port,
     foreground: true,
     noRemote: true,
   });
@@ -30,9 +43,9 @@ async function runExtension(
   if (!isAbsolute(pluginDir)) {
     pluginDir = join(Deno.cwd(), pluginDir);
   }
-  const remoteFirefox = await connectToFirefox({ port: DEFAULT_PORT });
+  const remoteFirefox = await connectToFirefox({ port });
 
-  const plugin = await remoteFirefox.installTemporaryAddon(pluginDir, false);
+  const plugin = await remoteFirefox.installTemporaryAddon(pluginDir, devtool);
 
   log.debug(`plugin info ${plugin}`);
 
