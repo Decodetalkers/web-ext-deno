@@ -7,13 +7,12 @@ import { isAbsolute, join } from "@std/path";
 import * as log from "@std/log";
 import { configureProfile } from "./firefox/preference.ts";
 import { reloadSupport } from "./reload.ts";
+import { DEFAULT_PORT } from "./common.ts";
 
-const DEFAULT_PORT: number = 41835;
-
-export * as remote from "./firefox/remote.ts"
-export * as preference from "./firefox/preference.ts"
-export * as rdpClient from "./firefox/rdp-client.ts"
-export * as firefoxCMD from "./firefox/firefox-cmd.ts"
+export * as remote from "./firefox/remote.ts";
+export * as preference from "./firefox/preference.ts";
+export * as rdpClient from "./firefox/rdp-client.ts";
+export * as firefoxCMD from "./firefox/firefox-cmd.ts";
 
 export type FirefoxOptions = {
   port?: number;

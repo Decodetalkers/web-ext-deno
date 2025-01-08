@@ -1,3 +1,4 @@
+import { CommonEncoder } from "../common.ts";
 import {
   RemoteTempInstallNotSupported,
   UsageError,
@@ -7,7 +8,7 @@ import type { RDPData } from "./rdp-client.ts";
 import { type AddonInfo, FirefoxConnection } from "./rdp-client.ts";
 import { delay } from "@std/async";
 import * as log from "@std/log";
-const encoder = new TextEncoder();
+
 export class FirefoxRemote {
   client: FirefoxConnection;
   checkedForAddonReloading: boolean = false;
@@ -126,7 +127,7 @@ export class FirefoxRemote {
     const addon = await this.getInstalledAddon(addonId);
     await this.checkForAddonReloading(addon);
     await this.addonRequest(addon, "reload");
-    const data = encoder.encode(
+    const data = CommonEncoder.encode(
       `\rLast extension reload: ${new Date().toTimeString()}`,
     );
     await Deno.stdout.write(

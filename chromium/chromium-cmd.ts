@@ -1,19 +1,17 @@
 export type ChromiumOptions = {
   binary?: string;
-  extensionDir: string;
+  extensionDir: string[];
   newDataDir?: boolean;
+  tmpDir: string;
 };
 
-async function buildArgs(options: ChromiumOptions): Promise<string[]> {
+function buildArgs(options: ChromiumOptions): string[] {
   const args: string[] = [];
 
-  args.unshift(`--load-extension=${options.extensionDir}`);
+  const extensionDir = options.extensionDir.join(",");
+  args.unshift(`--load-extension=${extensionDir}`);
   if (options.newDataDir) {
-    const tmpDir = await Deno.makeTempDir();
-    globalThis.addEventListener("unload", () => {
-      Deno.removeSync(tmpDir);
-    });
-    args.unshift(`--user-data-dir=${tmpDir}`);
+    args.unshift(`--user-data-dir=${options.tmpDir}`);
   }
 
   return args;
@@ -23,10 +21,11 @@ export type ChromiumInstance = {
   child: Deno.ChildProcess;
   args: string[];
 };
-export async function runChromium(
+
+export function runChromium(
   options: ChromiumOptions,
-): Promise<ChromiumInstance> {
-  const args = await buildArgs(options);
+): ChromiumInstance {
+  const args = buildArgs(options);
   const binary = options.binary || "chromium";
   const command = new Deno.Command(binary, {
     args,
@@ -34,8 +33,9 @@ export async function runChromium(
     stdout: "inherit",
   });
   const child = command.spawn();
-  globalThis.addEventListener("unload", () => {
+  Deno.addSignalListener("SIGINT", () => {
     child.kill();
   });
+
   return { binary, child, args };
 }

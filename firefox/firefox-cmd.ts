@@ -57,7 +57,7 @@ export function runFirefox(
   });
   const child = command.spawn();
 
-  globalThis.addEventListener("unload", () => {
+  Deno.addSignalListener("SIGINT", () => {
     child.kill();
   });
   return {

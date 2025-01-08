@@ -11,8 +11,10 @@ interface ArgParses {
   shouldExistProgram?: boolean;
   verbos?: boolean;
 
-  // firefox:
+  // shared
   port?: number;
+
+  // firefox:
   devtool?: boolean;
   profile?: string;
 
@@ -26,7 +28,7 @@ function argsToOptions(args: ArgParses): CMDOptions {
       return { port: args.port, devtool: args.devtool, profile: args.profile };
 
     default:
-      return { newDataDir: args.newDataDir };
+      return { newDataDir: args.newDataDir, port: args.port };
   }
 }
 

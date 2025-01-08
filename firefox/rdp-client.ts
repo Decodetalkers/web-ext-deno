@@ -1,11 +1,10 @@
 import * as log from "@std/log";
+import { CommonDecoder } from "../common.ts";
 export type Deferred = {
   resolve: (value: RDPData) => void;
   // deno-lint-ignore no-explicit-any
   reject: (reason?: any) => void;
 };
-
-const decoder = new TextDecoder();
 
 export type RDPData = {
   from: string;
@@ -41,7 +40,7 @@ export type AddonInfo = {
 
 // Parse RDP packets: BYTE_LENGTH + ':' + DATA.
 export function parseRDPMessage(data: Uint8Array): RDPMessage {
-  const str = decoder.decode(data);
+  const str = CommonDecoder.decode(data);
   const sepIdx = str.indexOf(":");
   if (sepIdx < 1) {
     return { data };
@@ -59,7 +58,7 @@ export function parseRDPMessage(data: Uint8Array): RDPMessage {
   }
 
   data = data.slice(sepIdx + 1);
-  const msg = decoder.decode(data.slice(0, byteLen));
+  const msg = CommonDecoder.decode(data.slice(0, byteLen));
   data = data.slice(byteLen);
 
   try {
@@ -101,7 +100,7 @@ export class FirefoxConnection extends EventTarget {
   private active: Map<string, Deferred> = new Map();
   constructor() {
     super();
-    globalThis.addEventListener("unload", () => {
+    Deno.addSignalListener("SIGINT", () => {
       this.disconnect();
     });
   }
