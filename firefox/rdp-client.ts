@@ -101,7 +101,7 @@ export class FirefoxConnection extends EventTarget {
   private active: Map<string, Deferred> = new Map();
   constructor() {
     super();
-    Deno.addSignalListener("SIGINT", () => {
+    globalThis.addEventListener("unload", () => {
       this.disconnect();
     });
   }

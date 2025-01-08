@@ -56,10 +56,10 @@ export function runFirefox(
     stdout: "inherit",
   });
   const child = command.spawn();
-  Deno.addSignalListener("SIGINT", () => {
+
+  globalThis.addEventListener("unload", () => {
     child.kill();
   });
-
   return {
     binary,
     child,
