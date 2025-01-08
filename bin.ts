@@ -54,7 +54,6 @@ if (args.run && args.sourceDir) {
   const sourceDir = args.sourceDir;
   const browser = args.browser!;
   const shouldExitProgram = args.shouldExitProgram;
-  console.log(shouldExitProgram)
   const options = argsToOptions(args);
   webExt.cmd(
     { browserInfo: { browser }, sourceDir },
