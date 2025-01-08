@@ -1,6 +1,8 @@
 import { runChromium } from "./chromium/chromium-cmd.ts";
 import * as log from "@std/log";
 
+export * as ChromiumCMD from "./chromium/chromium-cmd.ts";
+
 export type ChromiumOptions = {
   newDataDir?: boolean;
 };
