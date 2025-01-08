@@ -1,8 +1,9 @@
-# firefox
+# web-ext-deno
 
-first use tempdir create a profile, and zip the dir, name it with the extension,
-and put zip to the folder named extensions
+A deno typescript version of web-ext
 
-# chromium
+## TODO
 
-just run the chromium with `--load-extension`
+* Add full support for packaging extension
+* Support debug for android
+* Support chromium profile
