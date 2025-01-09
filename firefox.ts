@@ -1,4 +1,4 @@
-import FirefoxProfile from "firefox-profile";
+import { FirefoxProfile } from "@nobody/firefox-profile-deno";
 
 import { runFirefox } from "./firefox/firefox-cmd.ts";
 import { connectToFirefox, type FirefoxRemote } from "./firefox/remote.ts";

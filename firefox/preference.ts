@@ -1,5 +1,5 @@
 import { WebExtError } from "../error.ts";
-import type FirefoxProfile from "firefox-profile";
+import type { FirefoxProfile } from "@nobody/firefox-profile-deno";
 export const nonOverridablePreferences = [
   "devtools.debugger.remote-enabled",
   "devtools.debugger.prompt-connection",
