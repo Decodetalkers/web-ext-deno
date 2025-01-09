@@ -35,7 +35,7 @@ export function runChromium(
   });
   const child = command.spawn();
   if (options.shouldExitBrowser) {
-    Deno.addSignalListener("SIGINT", () => {
+    globalThis.addEventListener("unload", () => {
       child.kill();
     });
   }

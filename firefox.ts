@@ -54,6 +54,10 @@ async function runExtension(
 
   const plugin = await remoteFirefox.installTemporaryAddon(pluginDir, devtool);
 
+  Deno.addSignalListener("SIGINT", () => {
+    Deno.exit(0);
+  });
+
   log.debug(`plugin info ${plugin}`);
 
   const pluginId: string = plugin.addon.id;

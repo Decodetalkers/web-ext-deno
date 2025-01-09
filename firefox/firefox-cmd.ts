@@ -59,7 +59,7 @@ export function runFirefox(
   const child = command.spawn();
 
   if (profile.shouldExitBrowser) {
-    Deno.addSignalListener("SIGINT", () => {
+    globalThis.addEventListener("unload", () => {
       child.kill();
     });
   }

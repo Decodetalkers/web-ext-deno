@@ -34,6 +34,8 @@ export async function reloadSupport(
   ]);
   reader.releaseLock();
   await stdin.cancel();
+
+  Deno.exit(0);
 }
 
 async function reloadSupportInner(

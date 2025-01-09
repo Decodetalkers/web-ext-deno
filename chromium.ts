@@ -37,6 +37,10 @@ async function runExtension(
       }
     });
   }
+  Deno.addSignalListener("SIGINT", () => {
+    Deno.exit(0);
+  });
+
   return chromiumRunner;
 }
 
