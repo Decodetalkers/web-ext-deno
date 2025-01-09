@@ -9,7 +9,7 @@ const signalPromise = new Promise<void>((resolve, _) => {
   });
 });
 
-Deno.stdin.setRaw(true);
+Deno.stdin.setRaw(true, { cbreak: true });
 
 Deno.addSignalListener("SIGINT", () => {
   abortController.abort();
