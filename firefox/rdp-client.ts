@@ -8,6 +8,7 @@ export type Deferred = {
 
 export type RDPData = {
   from: string;
+  addons?: RDPAddonInfo[];
   // deno-lint-ignore no-explicit-any
   [key: string]: any; // Allows other unknown keys
 };
@@ -31,7 +32,7 @@ export type Pending = {
   deferred: Deferred;
 };
 
-export type AddonInfo = {
+export type RDPAddonInfo = {
   id: string;
   actor: string;
   // deno-lint-ignore no-explicit-any
@@ -104,6 +105,7 @@ export class FirefoxConnection extends EventTarget {
       this.disconnect();
     });
   }
+
   // deno-lint-ignore no-explicit-any
   emit(eventName: string, detail?: any) {
     const event = new CustomEvent(eventName, { detail });
@@ -118,9 +120,17 @@ export class FirefoxConnection extends EventTarget {
     this.removeEventListener(eventName, listener);
   }
 
-  onData(newData: Uint8Array) {
+  private onData(newData: Uint8Array) {
     const newIncoming = concatUint8Arrays(this.incoming, newData);
     this.readMessage(newIncoming);
+  }
+
+  private onEnd() {
+    this.emit("end");
+  }
+
+  private onError(error: Error) {
+    this.emit("error", error);
   }
 
   private readMessage(newIncoming: Uint8Array): boolean {
@@ -232,6 +242,7 @@ export class FirefoxConnection extends EventTarget {
             if (n == null) {
               this.rdpConnection = undefined;
               log.info("Connection closed by server");
+              this.onEnd();
               return;
             }
             const receivedMessage = buffer.subarray(0, n);
@@ -239,6 +250,7 @@ export class FirefoxConnection extends EventTarget {
           }
         } catch (error) {
           log.error("Error:", error);
+          this.onError(error as Error);
         } finally {
           this.rdpConnection?.close();
         }

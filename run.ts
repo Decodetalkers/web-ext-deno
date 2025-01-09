@@ -44,6 +44,7 @@ async function cmd(
         sourceDir,
         options as FirefoxOptions,
         shouldExistBrowser,
+        true,
       );
       break;
     default:
@@ -52,6 +53,7 @@ async function cmd(
         sourceDir,
         options as ChromiumOptions,
         shouldExistBrowser,
+        true,
       );
       break;
   }

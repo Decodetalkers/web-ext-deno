@@ -16,7 +16,8 @@ async function runExtension(
   sourceDir: string,
   options: ChromiumOptions,
   shouldExitProgram: boolean,
-) {
+  reloadCli: boolean = false,
+): Promise<ChromiumExtensionRunner> {
   const chromiumRunner = new ChromiumExtensionRunner(
     options,
     sourceDir,
@@ -25,14 +26,18 @@ async function runExtension(
   const { args } = await chromiumRunner.run({
     shouldExitBrowser: shouldExitProgram,
   });
+
   log.debug(args);
-  await reloadSupport(async () => {
-    try {
-      await chromiumRunner.reloadAllExtensions();
-    } catch (e) {
-      log.error((e as Error).message);
-    }
-  });
+  if (reloadCli) {
+    await reloadSupport(async () => {
+      try {
+        await chromiumRunner.reloadAllExtensions();
+      } catch (e) {
+        log.error((e as Error).message);
+      }
+    });
+  }
+  return chromiumRunner;
 }
 
 export default runExtension;

@@ -5,7 +5,7 @@ import {
   WebExtError,
 } from "../error.ts";
 import type { RDPData } from "./rdp-client.ts";
-import { type AddonInfo, FirefoxConnection } from "./rdp-client.ts";
+import { FirefoxConnection, type RDPAddonInfo } from "./rdp-client.ts";
 import { delay } from "@std/async";
 import * as log from "@std/log";
 
@@ -14,6 +14,24 @@ export class FirefoxRemote {
   checkedForAddonReloading: boolean = false;
   constructor(client: FirefoxConnection) {
     this.client = client;
+    client.on("end", () => {
+      log.debug('Received "end" from Firefox client');
+    });
+    client.on("rdp-error", (ev) => {
+      const rdpEv: CustomEvent = ev as CustomEvent;
+      const error = rdpEv.detail as Error;
+      log.debug(`Received error from client: ${JSON.stringify(error)}`);
+    });
+    client.on("error", (ev) => {
+      const rdpEv: CustomEvent = ev as CustomEvent;
+      const error = rdpEv.detail as Error;
+      log.debug(`Received error from client: ${String(error)}`);
+    });
+    client.on("unsolicited-event", (ev) => {
+      const rdpEv: CustomEvent = ev as CustomEvent;
+      const info = rdpEv.detail;
+      log.debug(`Received message from client: ${JSON.stringify(info)}`);
+    });
   }
   async getAddonsActor(): Promise<string> {
     try {
@@ -66,17 +84,18 @@ export class FirefoxRemote {
     return response;
   }
 
-  async getInstalledAddon(addonId: string): Promise<AddonInfo> {
+  async getInstalledAddon(addonId: string): Promise<RDPAddonInfo> {
     try {
       const response = await this.allInstalledAddons();
-      for (const addon of response.addons) {
+      const addons = response.addons!;
+      for (const addon of addons) {
         if (addon.id === addonId) {
           return addon;
         }
       }
       log.debug(
         `Remote Firefox has these addons: ${
-          response.addons.map((a: AddonInfo) => a.id)
+          addons.map((a: RDPAddonInfo) => a.id)
         }`,
       );
       return Promise.reject(
@@ -89,7 +108,7 @@ export class FirefoxRemote {
     }
   }
 
-  async addonRequest(addon: AddonInfo, request: string): Promise<RDPData> {
+  async addonRequest(addon: RDPAddonInfo, request: string): Promise<RDPData> {
     try {
       const response = await this.client.request({
         to: addon.actor,
@@ -102,7 +121,7 @@ export class FirefoxRemote {
     }
   }
 
-  async checkForAddonReloading(addon: AddonInfo): Promise<AddonInfo> {
+  async checkForAddonReloading(addon: RDPAddonInfo): Promise<RDPAddonInfo> {
     if (this.checkedForAddonReloading) {
       // We only need to check once if reload() is supported.
       return addon;

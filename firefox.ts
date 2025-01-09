@@ -1,7 +1,7 @@
 import FirefoxProfile from "firefox-profile";
 
 import { runFirefox } from "./firefox/firefox-cmd.ts";
-import { connectToFirefox } from "./firefox/remote.ts";
+import { connectToFirefox, type FirefoxRemote } from "./firefox/remote.ts";
 import { isAbsolute, join } from "@std/path";
 
 import * as log from "@std/log";
@@ -25,7 +25,8 @@ async function runExtension(
   sourceDir: string,
   options: FirefoxOptions,
   shouldExitProgram: boolean,
-) {
+  reloadCli: boolean = false,
+): Promise<FirefoxRemote> {
   let profile = options.profile;
   if (!profile) {
     const firefoxTmpProfile = new FirefoxProfile();
@@ -57,13 +58,16 @@ async function runExtension(
 
   const pluginId: string = plugin.addon.id;
 
-  await reloadSupport(async () => {
-    try {
-      await remoteFirefox.reloadAddon(pluginId);
-    } catch (e) {
-      log.error((e as Error).message);
-    }
-  });
+  if (reloadCli) {
+    await reloadSupport(async () => {
+      try {
+        await remoteFirefox.reloadAddon(pluginId);
+      } catch (e) {
+        log.error((e as Error).message);
+      }
+    });
+  }
+  return remoteFirefox;
 }
 
 export default runExtension;
