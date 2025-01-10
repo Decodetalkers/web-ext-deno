@@ -116,10 +116,10 @@ export function getPrefs(app: AppKeys = "firefox"): Prefreference {
   };
 }
 
-export function configureProfile(
+export async function configureProfile(
   profile: FirefoxProfile,
   app: AppKeys = "firefox",
-): FirefoxProfile {
+): Promise<FirefoxProfile> {
   // Set default preferences. Some of these are required for the add-on to
   // operate, such as disabling signatures.
   const prefs = getPrefs(app);
@@ -127,6 +127,6 @@ export function configureProfile(
     profile.setPreference(pref, prefs[pref]);
   });
 
-  profile.updatePreferences();
+  await profile.updatePreferences();
   return profile;
 }

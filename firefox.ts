@@ -30,7 +30,7 @@ async function runExtension(
   let profile = options.profile;
   if (!profile) {
     const firefoxTmpProfile = new FirefoxProfile();
-    configureProfile(firefoxTmpProfile);
+    await configureProfile(firefoxTmpProfile);
     profile = firefoxTmpProfile.path();
   }
   const port = options.port || DEFAULT_PORT;
