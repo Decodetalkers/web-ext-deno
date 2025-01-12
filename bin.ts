@@ -3,6 +3,11 @@ import type { CMDOptions, ExtTarget } from "./run.ts";
 import webExt from "./mod.ts";
 
 import * as log from "@std/log";
+import file from "./deno.json" with { type: "json" };
+
+import { blue, yellow } from "@std/fmt/colors";
+
+const version = file.version;
 
 interface ArgParses {
   run?: boolean;
@@ -24,6 +29,9 @@ interface ArgParses {
 
   // build
   targetDir?: string;
+
+  help?: boolean;
+  version?: boolean;
 }
 
 function argsToOptions(args: ArgParses): CMDOptions {
@@ -36,8 +44,34 @@ function argsToOptions(args: ArgParses): CMDOptions {
   }
 }
 
+function getVersion() {
+  console.log(`version ${version}`);
+  Deno.exit(0);
+}
+function help() {
+  console.log(blue("welcome to web-ext cli"));
+  console.log();
+  console.log(
+    `${yellow("--run")}      run and debug the program`,
+  );
+  console.log(
+    `${yellow("--build")}    build the xpi file`,
+  );
+  console.log(`${yellow("--version")}  get the project version`);
+  console.log();
+  console.log(`version ${version}`);
+  Deno.exit(0);
+}
+
 const args = parseArgs(Deno.args) as ArgParses;
 
+if (args.help) {
+  help();
+}
+
+if (args.version) {
+  getVersion();
+}
 if (args.verbos) {
   log.setup({
     handlers: {
