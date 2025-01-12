@@ -1,7 +1,8 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@nobody/firefox-profile-deno@0.3": "0.3.0",
+    "jsr:@nobody/firefox-profile-deno@~0.3.1": "0.3.1",
+    "jsr:@nobody/xpi-util@0.2": "0.2.0",
     "jsr:@std/assert@0.226": "0.226.0",
     "jsr:@std/assert@1": "1.0.10",
     "jsr:@std/async@^1.0.9": "1.0.9",
@@ -21,13 +22,21 @@
     "jsr:@zip-js/zip-js@^2.7.54": "2.7.54"
   },
   "jsr": {
-    "@nobody/firefox-profile-deno@0.3.0": {
-      "integrity": "1d83e0f9e1adcbedfe0be95b75ba57f6c3b335ab0a21c8028027803945410c87",
+    "@nobody/firefox-profile-deno@0.3.1": {
+      "integrity": "1239cfa4860e5a1dbd9b18767e8aa58bf6305a3c42ff07ea323455e39b1b6a57",
       "dependencies": [
+        "jsr:@nobody/xpi-util",
         "jsr:@std/fs@~0.229.3",
         "jsr:@std/ini",
         "jsr:@std/log@~0.224.12",
-        "jsr:@std/path@~0.225.2",
+        "jsr:@std/path@~0.225.2"
+      ]
+    },
+    "@nobody/xpi-util@0.2.0": {
+      "integrity": "f56c3b1076a798ab909d2ac61349eb9d2cd1f1538cef982229c48eb7f614d777",
+      "dependencies": [
+        "jsr:@std/fs@^1.0.9",
+        "jsr:@std/path@^1.0.8",
         "jsr:@zip-js/zip-js"
       ]
     },
@@ -102,7 +111,8 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@nobody/firefox-profile-deno@0.3",
+      "jsr:@nobody/firefox-profile-deno@~0.3.1",
+      "jsr:@nobody/xpi-util@0.2",
       "jsr:@std/assert@1",
       "jsr:@std/async@^1.0.9",
       "jsr:@std/cli@^1.0.10",

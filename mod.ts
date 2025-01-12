@@ -1,3 +1,4 @@
 import cmd from "./run.ts";
+import build from "./build.ts";
 
-export default { cmd };
+export default { cmd, build };

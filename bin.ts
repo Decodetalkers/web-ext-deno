@@ -6,6 +6,7 @@ import * as log from "@std/log";
 
 interface ArgParses {
   run?: boolean;
+  build?: boolean;
   sourceDir?: string;
   browser?: ExtTarget;
   shouldExitProgram?: boolean;
@@ -20,6 +21,9 @@ interface ArgParses {
 
   // chromium
   newDataDir?: boolean;
+
+  // build
+  targetDir?: string;
 }
 
 function argsToOptions(args: ArgParses): CMDOptions {
@@ -50,12 +54,16 @@ if (args.verbos) {
   });
 }
 
+if (args.build && args.sourceDir) {
+  await webExt.build(args.sourceDir, args.targetDir);
+}
+
 if (args.run && args.sourceDir) {
   const sourceDir = args.sourceDir;
   const browser = args.browser!;
   const shouldExitProgram = args.shouldExitProgram;
   const options = argsToOptions(args);
-  webExt.cmd(
+  await webExt.cmd(
     { browserInfo: { browser }, sourceDir },
     { shouldExitProgram, options },
   );
