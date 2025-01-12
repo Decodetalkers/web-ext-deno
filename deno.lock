@@ -1,47 +1,40 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@nobody/firefox-profile-deno@~0.3.2": "0.3.2",
-    "jsr:@nobody/xpi-util@0.2": "0.2.0",
-    "jsr:@std/assert@0.226": "0.226.0",
+    "jsr:@nobody/firefox-profile-deno@~0.3.3": "0.3.3",
+    "jsr:@nobody/xpi-util@~0.2.1": "0.2.1",
     "jsr:@std/assert@1": "1.0.10",
     "jsr:@std/async@^1.0.9": "1.0.9",
     "jsr:@std/cli@^1.0.10": "1.0.10",
     "jsr:@std/fmt@^1.0.4": "1.0.4",
     "jsr:@std/fs@*": "1.0.6",
     "jsr:@std/fs@^1.0.9": "1.0.9",
-    "jsr:@std/fs@~0.229.3": "0.229.3",
-    "jsr:@std/ini@~0.225.2": "0.225.2",
+    "jsr:@std/ini@^1.0.0-rc.5": "1.0.0-rc.5",
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "jsr:@std/io@0.225": "0.225.0",
     "jsr:@std/log@~0.224.12": "0.224.13",
     "jsr:@std/log@~0.224.13": "0.224.13",
-    "jsr:@std/path@1.0.0-rc.1": "1.0.0-rc.1",
     "jsr:@std/path@^1.0.8": "1.0.8",
-    "jsr:@std/path@~0.225.2": "0.225.2",
     "jsr:@zip-js/zip-js@^2.7.54": "2.7.54"
   },
   "jsr": {
-    "@nobody/firefox-profile-deno@0.3.2": {
-      "integrity": "03bcce63becba45c97e1cd7f296930995e66a05143689cffb10e08377180861d",
+    "@nobody/firefox-profile-deno@0.3.3": {
+      "integrity": "ea8eb7cc86404d43a6e9190389438c518843da0df6ef1642f8f18c52e80c72e8",
       "dependencies": [
         "jsr:@nobody/xpi-util",
-        "jsr:@std/fs@~0.229.3",
+        "jsr:@std/fs@^1.0.9",
         "jsr:@std/ini",
-        "jsr:@std/log@~0.224.12",
-        "jsr:@std/path@~0.225.2"
+        "jsr:@std/log@~0.224.13",
+        "jsr:@std/path"
       ]
     },
-    "@nobody/xpi-util@0.2.0": {
-      "integrity": "f56c3b1076a798ab909d2ac61349eb9d2cd1f1538cef982229c48eb7f614d777",
+    "@nobody/xpi-util@0.2.1": {
+      "integrity": "a1d529e45366a69407deb935fa16962d1390e651eaa16ec390df0d566b7f441f",
       "dependencies": [
         "jsr:@std/fs@^1.0.9",
-        "jsr:@std/path@^1.0.8",
+        "jsr:@std/path",
         "jsr:@zip-js/zip-js"
       ]
-    },
-    "@std/assert@0.226.0": {
-      "integrity": "0dfb5f7c7723c18cec118e080fec76ce15b4c31154b15ad2bd74822603ef75b3"
     },
     "@std/assert@1.0.10": {
       "integrity": "59b5cbac5bd55459a19045d95cc7c2ff787b4f8527c0dd195078ff6f9481fbb3",
@@ -58,26 +51,20 @@
     "@std/fmt@1.0.4": {
       "integrity": "e14fe5bedee26f80877e6705a97a79c7eed599e81bb1669127ef9e8bc1e29a74"
     },
-    "@std/fs@0.229.3": {
-      "integrity": "783bca21f24da92e04c3893c9e79653227ab016c48e96b3078377ebd5222e6eb",
-      "dependencies": [
-        "jsr:@std/path@1.0.0-rc.1"
-      ]
-    },
     "@std/fs@1.0.6": {
       "integrity": "42b56e1e41b75583a21d5a37f6a6a27de9f510bcd36c0c85791d685ca0b85fa2",
       "dependencies": [
-        "jsr:@std/path@^1.0.8"
+        "jsr:@std/path"
       ]
     },
     "@std/fs@1.0.9": {
       "integrity": "3eef7e3ed3d317b29432c7dcb3b20122820dbc574263f721cb0248ad91bad890",
       "dependencies": [
-        "jsr:@std/path@^1.0.8"
+        "jsr:@std/path"
       ]
     },
-    "@std/ini@0.225.2": {
-      "integrity": "c70f6560dacb7e333c2f868aa09aaa4117e6618cc66c60d0b4ca716c135c8e67"
+    "@std/ini@1.0.0-rc.5": {
+      "integrity": "d3cb36ceaed576f8eb1954ddb4a6c9ec82520d55745eacbcadc4ae24a09eec3e"
     },
     "@std/internal@1.0.5": {
       "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
@@ -93,15 +80,6 @@
         "jsr:@std/io"
       ]
     },
-    "@std/path@0.225.2": {
-      "integrity": "0f2db41d36b50ef048dcb0399aac720a5348638dd3cb5bf80685bf2a745aa506",
-      "dependencies": [
-        "jsr:@std/assert@0.226"
-      ]
-    },
-    "@std/path@1.0.0-rc.1": {
-      "integrity": "b8c00ae2f19106a6bb7cbf1ab9be52aa70de1605daeb2dbdc4f87a7cbaf10ff6"
-    },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
     },
@@ -111,8 +89,8 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@nobody/firefox-profile-deno@~0.3.2",
-      "jsr:@nobody/xpi-util@0.2",
+      "jsr:@nobody/firefox-profile-deno@~0.3.3",
+      "jsr:@nobody/xpi-util@~0.2.1",
       "jsr:@std/assert@1",
       "jsr:@std/async@^1.0.9",
       "jsr:@std/cli@^1.0.10",
