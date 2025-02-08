@@ -58,12 +58,12 @@ const WebExt = {
     type: "boolean",
   },
   build: {
-    description: "should exit browser after exit program",
+    description: "build the target to xpi",
     default: false,
     type: "boolean",
   },
   sourceDir: {
-    description: "should exit browser after exit program",
+    description: "set the path of source for the program to read",
     type: "string",
   },
   verbos: {
