@@ -59,7 +59,7 @@ const WebExt = {
   },
   build: {
     description: "should exit browser after exit program",
-    default: true,
+    default: false,
     type: "boolean",
   },
   sourceDir: {
