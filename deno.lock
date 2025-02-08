@@ -1,7 +1,7 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@nobody/deno-clap@0.2": "0.2.0",
+    "jsr:@nobody/deno-clap@~0.2.1": "0.2.1",
     "jsr:@nobody/firefox-profile-deno@~0.3.3": "0.3.3",
     "jsr:@nobody/xpi-util@~0.2.1": "0.2.1",
     "jsr:@std/assert@^1.0.11": "1.0.11",
@@ -24,8 +24,8 @@
     "jsr:@zip-js/zip-js@^2.7.57": "2.7.57"
   },
   "jsr": {
-    "@nobody/deno-clap@0.2.0": {
-      "integrity": "b6bfd856f805282dd8888bfc0126d905d37f39455df3dee672a16d2e2a9df3b9",
+    "@nobody/deno-clap@0.2.1": {
+      "integrity": "5165afc05e66f88697dcb20c733d6d1a36712d63b9c8b3c079802668a0607b18",
       "dependencies": [
         "jsr:@std/cli",
         "jsr:@std/fmt@^1.0.5"
@@ -125,7 +125,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@nobody/deno-clap@0.2",
+      "jsr:@nobody/deno-clap@~0.2.1",
       "jsr:@nobody/firefox-profile-deno@~0.3.3",
       "jsr:@nobody/xpi-util@~0.2.1",
       "jsr:@std/assert@^1.0.11",
