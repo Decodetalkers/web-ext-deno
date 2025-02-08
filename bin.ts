@@ -1,77 +1,104 @@
-import { parseArgs } from "@std/cli";
 import type { CMDOptions, ExtTarget } from "./run.ts";
 import webExt from "./mod.ts";
 
 import * as log from "@std/log";
 import file from "./deno.json" with { type: "json" };
 
-import { blue, yellow } from "@std/fmt/colors";
+import { clapCli, type Command } from "@nobody/deno-clap";
 
 const version = file.version;
 
-interface ArgParses {
-  run?: boolean;
-  build?: boolean;
-  sourceDir?: string;
-  browser?: ExtTarget;
-  shouldExitProgram?: boolean;
-  verbos?: boolean;
+const WebExt = {
+  run: {
+    description: "run the WebExt",
+    default: false,
+  },
+  firefox: {
+    description: "run with firefox",
+    children: {
+      port: {
+        description: "with port",
+        type: "number",
+        default: 8000,
+      },
+      devtool: {
+        description: "with devtool",
+        type: "boolean",
+        default: false,
+      },
+      profile: {
+        description: "with profile",
+        type: "string",
+      },
+    },
+  },
+  chromium: {
+    description: "run with chromium",
+    children: {
+      newDataDir: {
+        description: "withNewDataDir",
+        type: "boolean",
+        default: true,
+      },
+      port: {
+        description: "with port",
+        type: "number",
+        default: 8000,
+      },
+    },
+  },
+  targetDir: {
+    description: "set the targetDir",
+    default: "./",
+    type: "string",
+  },
+  shouldExitProgram: {
+    description: "should exit browser after exit program",
+    default: true,
+    type: "boolean",
+  },
+  build: {
+    description: "should exit browser after exit program",
+    default: true,
+    type: "boolean",
+  },
+  sourceDir: {
+    description: "should exit browser after exit program",
+    type: "string",
+  },
+  verbos: {
+    description: "tracing the log",
+    default: false,
+    type: "boolean",
+  },
+} as const;
 
-  // shared
-  port?: number;
+const cmd: Command = {
+  exeName: "web-ext",
+  description: "web-ext in deno",
+  author: "Decodetalkers",
+  version: version,
+};
 
-  // firefox:
-  devtool?: boolean;
-  profile?: string;
+const argsPre = clapCli(WebExt, cmd);
 
-  // chromium
-  newDataDir?: boolean;
-
-  // build
-  targetDir?: string;
-
-  help?: boolean;
-  version?: boolean;
+if (!argsPre) {
+  Deno.exit();
 }
+const args = argsPre!;
 
-function argsToOptions(args: ArgParses): CMDOptions {
-  switch (args.browser) {
-    case "firefox":
-      return { port: args.port, devtool: args.devtool, profile: args.profile };
+type ArgInfo = typeof args;
 
-    default:
-      return { newDataDir: args.newDataDir, port: args.port };
+function argsToOptions(args: ArgInfo): CMDOptions {
+  if (args.firefox) {
+    return args.firefox;
   }
+  if (args.chromium) {
+    return args.chromium;
+  }
+  return {};
 }
 
-function getVersion() {
-  console.log(`version ${version}`);
-  Deno.exit(0);
-}
-function help() {
-  console.log(blue("welcome to web-ext cli"));
-  console.log();
-  console.log(
-    `${yellow("--run")}      run and debug the program`,
-  );
-  console.log(
-    `${yellow("--build")}    build the xpi file`,
-  );
-  console.log(`${yellow("--version")}  get the project version`);
-  console.log();
-  console.log(`version ${version}`);
-  Deno.exit(0);
-}
-
-const args = parseArgs(Deno.args) as ArgParses;
-
-if (args.help) {
-  help();
-}
-
-if (args.version) {
-  getVersion();
-}
 if (args.verbos) {
   log.setup({
     handlers: {
@@ -94,9 +121,13 @@ if (args.build && args.sourceDir) {
 
 if (args.run && args.sourceDir) {
   const sourceDir = args.sourceDir;
-  const browser = args.browser!;
   const shouldExitProgram = args.shouldExitProgram;
-  const options = argsToOptions(args);
+  const options = argsToOptions(args)!;
+
+  let browser: ExtTarget = "firefox";
+  if (args.chromium) {
+    browser = "chrome";
+  }
   await webExt.cmd(
     { browserInfo: { browser }, sourceDir },
     { shouldExitProgram, options },

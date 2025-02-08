@@ -1,5 +1,9 @@
 import { packageXpi } from "@nobody/xpi-util";
 import { CommonDecoder } from "./common.ts";
-export default async function build(sourceDir: string, targetFoldr?: string) {
-  await packageXpi(sourceDir, CommonDecoder, targetFoldr);
+import { ensureDir } from "@std/fs";
+export default async function build(sourceDir: string, targetFolder?: string) {
+  if (targetFolder) {
+    await ensureDir(targetFolder);
+  }
+  await packageXpi(sourceDir, CommonDecoder, targetFolder);
 }
