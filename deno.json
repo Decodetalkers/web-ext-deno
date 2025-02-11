@@ -1,6 +1,6 @@
 {
   "name": "@nobody/web-ext-deno",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "exports": {
     ".": "./mod.ts",
     "./bin": "./bin.ts",
@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "imports": {
-    "@nobody/deno-clap": "jsr:@nobody/deno-clap@^0.2.6",
+    "@nobody/deno-clap": "jsr:@nobody/deno-clap@^0.2.8",
     "@nobody/firefox-profile-deno": "jsr:@nobody/firefox-profile-deno@^0.3.3",
     "@nobody/xpi-util": "jsr:@nobody/xpi-util@^0.2.1",
     "@std/assert": "jsr:@std/assert@^1.0.11",
