@@ -85,7 +85,7 @@ const argsPre = clapCli(WebExt, cmd);
 if (!argsPre) {
   Deno.exit();
 }
-const args = argsPre!;
+const args = argsPre;
 
 type ArgInfo = typeof args;
 
